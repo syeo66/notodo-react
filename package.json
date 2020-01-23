@@ -1,6 +1,8 @@
 {
   "name": "notodo-react",
   "version": "0.1.0",
+  "description": "A react frontent for the tonotodo server.",
+  "author": "Red Ochsenbein <red@redochsenbein.ch>",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
