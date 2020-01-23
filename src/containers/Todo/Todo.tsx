@@ -4,10 +4,6 @@ import styled from 'styled-components'
 import { DesignToken } from '../../design-tokens'
 import TodoEntry from '../../components/TodoEntry'
 
-interface MainContainerProps {
-  className?: string
-}
-
 const DateBar = styled.div`
   display: flex;
   justify-content: center;
@@ -15,23 +11,17 @@ const DateBar = styled.div`
   font-size: ${DesignToken.dateHeader.fontSize};
 `
 
-const MainContainer: React.FC<MainContainerProps> = ({ className }) => {
+const Todo: React.FC = () => {
   return (
-    <main className={className}>
+    <>
       <DateBar>⇐ 22.06.1974 ⇒</DateBar>
       <TodoEntry isDone />
       <TodoEntry isDone />
       <TodoEntry isSelected />
       <TodoEntry />
       <TodoEntry />
-    </main>
+    </>
   )
 }
 
-const Main = styled(MainContainer)`
-  max-width: ${DesignToken.maxWidth};
-  width: 100%;
-  margin: 0 auto;
-`
-
-export default Main
+export default Todo

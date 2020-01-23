@@ -10,6 +10,7 @@ export enum Color {
 }
 
 export enum Padding {
+  xxs = '0.25rem',
   xs = '0.5rem',
   s = '1rem',
   m = '1.2rem',
@@ -27,6 +28,22 @@ export enum FontSize {
   xxl = '2.2rem',
 }
 
+export enum BorderWidth {
+  xs = '1px',
+  s = '2px',
+  m = '3px',
+  l = '4px',
+  xl = '5px',
+}
+
+export enum BorderRadius {
+  xs = '0.1rem',
+  s = '0.2rem',
+  m = '0.3rem',
+  l = '0.5rem',
+  xl = '0.8rem',
+}
+
 export enum BreakPoint {
   mobile = '768px',
 }
@@ -36,6 +53,7 @@ export const DesignToken = {
   lineHeightFactor: 1.613,
 
   defaultPadding: Padding.m,
+  defaultBorderRadius: BorderRadius.m,
 
   maxWidth: '1170px',
 
@@ -44,11 +62,19 @@ export const DesignToken = {
     fontSize: FontSize.m,
   },
 
+  form: {
+    borderRadius: BorderRadius.s,
+    borderWidth: BorderWidth.xs,
+    fontSize: FontSize.s,
+    padding: Padding.xxs,
+    marginBottom: Padding.xs,
+  },
+
   todoEntry: {
     padding: Padding.xs,
 
     selectBorder: {
-      width: '2px',
+      width: BorderWidth.s,
     },
   },
 }
