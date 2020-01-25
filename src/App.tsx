@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
@@ -29,7 +29,19 @@ const Main = styled.main`
 `
 
 const App: React.FC = () => {
-  const theme = false ? darkTheme : defaultTheme
+  const [isDarkTheme, setIsDarkTheme] = useState(false)
+
+  useEffect(() => {
+    const mml = window.matchMedia('(prefers-color-scheme: dark)')
+    setIsDarkTheme(mml.matches)
+
+    const mediaListener = (ev: MediaQueryListEvent) => setIsDarkTheme(ev.matches)
+    mml.addListener(mediaListener)
+
+    return () => mml.removeListener(mediaListener)
+  }, [])
+
+  const theme = isDarkTheme ? darkTheme : defaultTheme
 
   return (
     <ThemeProvider theme={theme}>
@@ -37,9 +49,10 @@ const App: React.FC = () => {
         <AppContainer>
           <Main>
             <Switch>
+              <Route path="/" exect component={Login} />
               <Route path="/login" exact component={Login} />
               <Route path="/register" exact component={Registration} />
-              <Route path="/app" component={Todo} />
+              <Route path="/app" exact component={Todo} />
             </Switch>
           </Main>
         </AppContainer>
