@@ -9,5 +9,10 @@ export default {
 
   panel: { backgroundColor: Color.tussock + '33' },
 
-  form: { backgroundColor: Color.pumice, borderColor: Color.tussock },
+  form: {
+    backgroundColor: Color.white,
+    borderColor: Color.tussock,
+    textColor: Color.heavyMetal,
+    button: { backgroundColor: Color.goldenrod, textColor: Color.heavyMetal },
+  },
 }

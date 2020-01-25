@@ -1,3 +1,1 @@
-import { Input } from './Form'
-
-export { Input }
+export { Input, Label, Button } from './Form'

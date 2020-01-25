@@ -1,7 +1,7 @@
 // Options
 export enum Color {
   heavyMetal = '#333533',
-  pumice = '#bbbfbb',
+  grayNurse = '#dddfdd',
   white = '#ffffff',
 
   goldenrod = '#FBCE75',
@@ -54,6 +54,7 @@ export const DesignToken = {
 
   defaultPadding: Padding.m,
   defaultBorderRadius: BorderRadius.m,
+  defaultFontSize: FontSize.s,
 
   maxWidth: '1170px',
 
@@ -68,6 +69,12 @@ export const DesignToken = {
     fontSize: FontSize.s,
     padding: Padding.xxs,
     marginBottom: Padding.xs,
+
+    button: {
+      padding: `${Padding.xs} ${Padding.s}`,
+      marginTop: Padding.xs,
+      marginBottom: Padding.xxs,
+    },
   },
 
   todoEntry: {

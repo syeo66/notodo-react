@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy, Suspense } from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-
-import Todo from './containers/Todo'
-import Login from './containers/Login'
-import Registration from './containers/Registration'
 
 import { DesignToken } from './design-tokens'
 
 import darkTheme from './themes/dark'
 import defaultTheme from './themes/default'
+
+const Login = lazy(() => import('./pages/Login'))
+const Registration = lazy(() => import('./pages/Registration'))
+const Todo = lazy(() => import('./pages/Todo'))
 
 const AppContainer = styled.div`
   display: flex;
@@ -49,10 +49,12 @@ const App: React.FC = () => {
         <AppContainer>
           <Main>
             <Switch>
-              <Route path="/" exect component={Login} />
-              <Route path="/login" exact component={Login} />
-              <Route path="/register" exact component={Registration} />
-              <Route path="/app" exact component={Todo} />
+              <Suspense fallback={<></>}>
+                <Route path="/login" exact component={Login} />
+                <Route path="/register" exact component={Registration} />
+                <Route path="/app" exact component={Todo} />
+                <Route path="/" exact component={Login} />
+              </Suspense>
             </Switch>
           </Main>
         </AppContainer>
