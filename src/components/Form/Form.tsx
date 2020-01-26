@@ -37,7 +37,11 @@ export const Button = styled.button`
   margin-bottom: ${DesignToken.form.button.marginBottom};
   cursor: pointer;
   outline: 0;
+  transition: all 300ms;
+  box-shadow: 0 3px 4px ${props => props.theme.form.button.backgroundHoverColor}55;
 
   &:hover {
+    background-color: ${props => props.theme.form.button.backgroundHoverColor};
+    box-shadow: 0 4px 7px ${props => props.theme.form.button.backgroundHoverColor}55;
   }
 `

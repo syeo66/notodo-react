@@ -15,6 +15,10 @@ export default {
     backgroundColor: Color.white,
     borderColor: Color.tussock,
     textColor: Color.heavyMetal,
-    button: { backgroundColor: Color.goldenrod, textColor: Color.heavyMetal },
+    button: {
+      backgroundColor: Color.goldenrod,
+      textColor: Color.heavyMetal,
+      backgroundHoverColor: Color.tussock,
+    },
   },
 }

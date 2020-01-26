@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/react-hooks'
 
 import { client } from './apollo'
 import { DesignToken } from './design-tokens'
+import Header from './components/Header'
 
 import darkTheme from './themes/dark'
 import defaultTheme from './themes/default'
@@ -51,6 +52,7 @@ const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <Router>
           <AppContainer>
+            <Header />
             <Main>
               <Switch>
                 <Suspense fallback={<></>}>
