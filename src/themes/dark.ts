@@ -7,6 +7,8 @@ export default {
   primaryColor: Color.goldenrod,
   secondaryColor: Color.tussock,
 
+  errorColor: Color.guardsmanRed,
+
   panel: { backgroundColor: Color.goldenrod + '33' },
 
   form: {

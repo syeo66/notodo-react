@@ -7,6 +7,9 @@ export enum Color {
   goldenrod = '#FBCE75',
   tussock = '#C09842',
   cornHarvest = '#87650A',
+
+  pomegranate = '#F43A21',
+  guardsmanRed = '#D50201',
 }
 
 export enum Padding {

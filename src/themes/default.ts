@@ -7,6 +7,8 @@ export default {
   primaryColor: Color.tussock,
   secondaryColor: Color.cornHarvest,
 
+  errorColor: Color.pomegranate,
+
   panel: { backgroundColor: Color.tussock + '33' },
 
   form: {
