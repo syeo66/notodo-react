@@ -9,7 +9,7 @@ export default {
 
   errorColor: Color.pomegranate,
 
-  panel: { backgroundColor: Color.tussock + '33' },
+  panel: { backgroundColor: Color.tussock },
 
   form: {
     backgroundColor: Color.white,

@@ -9,7 +9,7 @@ export default {
 
   errorColor: Color.guardsmanRed,
 
-  panel: { backgroundColor: Color.goldenrod + '33' },
+  panel: { backgroundColor: Color.goldenrod },
 
   form: {
     backgroundColor: Color.heavyMetal,

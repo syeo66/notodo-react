@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react'
 import { loader } from 'graphql.macro'
 import styled from 'styled-components'
 import { useLazyQuery } from '@apollo/react-hooks'
+import Color from 'color'
 
 import { Input, Label, Button } from '../../components/Form'
 
@@ -14,7 +15,17 @@ const loginQuery = loader('./graphql/login.graphql')
 
 const Panel = styled.div`
   padding: ${DesignToken.defaultPadding};
-  background-color: ${props => props.theme.panel.backgroundColor};
+  border: 1px solid ${props => props.theme.panel.backgroundColor};
+  box-shadow: 0 2px 15px
+      ${props =>
+        Color(props.theme.panel.backgroundColor)
+          .alpha(0.4)
+          .string()},
+    0 0 5px
+      ${props =>
+        Color(props.theme.panel.backgroundColor)
+          .alpha(0.6)
+          .string()};
   border-radius: ${DesignToken.defaultBorderRadius};
 `
 

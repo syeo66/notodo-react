@@ -1,18 +1,24 @@
 import styled from 'styled-components'
+import Color from 'color'
 
 import { DesignToken } from '../../design-tokens'
 
 export const Input = styled.input`
-  border-radius: ${DesignToken.form.borderRadius};
   background-color: ${props => props.theme.form.backgroundColor};
   color: ${props => props.theme.form.borderColor};
-  border: ${DesignToken.form.borderWidth} solid ${props => props.theme.form.borderColor};
+  background-color: ${props =>
+    Color(props.theme.form.borderColor)
+      .alpha(0.05)
+      .string()};
+  border: 0px none transparent;
+  border-bottom: ${DesignToken.form.borderWidth} solid ${props => props.theme.form.borderColor};
   font-size: ${DesignToken.form.fontSize};
   line-height: calc(${DesignToken.form.fontSize} * ${DesignToken.lineHeightFactor});
   padding: ${DesignToken.form.padding};
   width: calc(100% - ${DesignToken.form.padding} * 2);
   margin-bottom: ${DesignToken.form.marginBottom};
   outline: 0;
+  transition: all ${DesignToken.defaultTransitionLength};
 
   &:focus {
     color: ${props => props.theme.form.textColor};
@@ -37,11 +43,19 @@ export const Button = styled.button`
   margin-bottom: ${DesignToken.form.button.marginBottom};
   cursor: pointer;
   outline: 0;
-  transition: all 300ms;
-  box-shadow: 0 3px 4px ${props => props.theme.form.button.backgroundHoverColor}55;
+  transition: all ${DesignToken.defaultTransitionLength};
+  box-shadow: 0 3px 4px
+    ${props =>
+      Color(props.theme.form.button.backgroundHoverColor)
+        .alpha(0.5)
+        .string()};
 
   &:hover {
     background-color: ${props => props.theme.form.button.backgroundHoverColor};
-    box-shadow: 0 4px 7px ${props => props.theme.form.button.backgroundHoverColor}55;
+    box-shadow: 0 4px 10px
+      ${props =>
+        Color(props.theme.form.button.backgroundHoverColor)
+          .alpha(0.5)
+          .string()};
   }
 `

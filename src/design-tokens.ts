@@ -39,6 +39,12 @@ export enum BorderWidth {
   xl = '5px',
 }
 
+export enum TransitionLength {
+  s = '300ms',
+  m = '500ms',
+  l = '1000ms',
+}
+
 export enum BorderRadius {
   xs = '0.1rem',
   s = '0.2rem',
@@ -58,6 +64,7 @@ export const DesignToken = {
   defaultPadding: Padding.m,
   defaultBorderRadius: BorderRadius.m,
   defaultFontSize: FontSize.s,
+  defaultTransitionLength: TransitionLength.m,
 
   maxWidth: '1170px',
 
