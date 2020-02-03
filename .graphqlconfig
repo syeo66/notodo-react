@@ -1,0 +1,15 @@
+{
+  "name": "Remote Schema",
+  "schemaPath": "remote-schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Remote GraphQL Endpoint": {
+        "url": "https://api.tonotodo.com/graphql",
+        "headers": {
+          "user-agent": "VC GraphQL"
+        },
+        "introspect": true
+      }
+    }
+  }
+}

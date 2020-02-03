@@ -1,6 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { format } from 'date-fns'
+
 import { DesignToken } from '../../design-tokens'
+import { TIME_FORMAT } from '../../constants'
 
 const EntryCell = styled.div`
   &:not(:first-child) {
@@ -20,17 +23,19 @@ const TimeCell = styled(EntryCell)`
 `
 
 interface TodoEntryComponentProps {
+  title: string
   className?: string
   isSelected?: boolean
-  isDone?: boolean
+  doneAt?: Date
 }
 
-const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ className, isDone }) => {
+const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt }) => {
+  console.log(doneAt)
   return (
     <div className={className}>
-      <TickCell>{isDone && '✓'}</TickCell>
-      <TimeCell>{isDone && '09:15'}</TimeCell>
-      <EntryCell>The thing to do</EntryCell>
+      <TickCell>{!!doneAt && '✓'}</TickCell>
+      <TimeCell>{!!doneAt && format(doneAt, TIME_FORMAT)}</TimeCell>
+      <EntryCell>{title}</EntryCell>
     </div>
   )
 }
@@ -40,7 +45,7 @@ const TodoEntry = styled(TodoEntryComponent)`
   align-items: center;
   padding: ${DesignToken.todoEntry.padding};
   color: ${props => (props.isSelected ? props.theme.primaryColor : props.theme.textColor)};
-  opacity: ${props => (props.isSelected || props.isDone ? 1 : 0.4)};
+  opacity: ${props => (props.isSelected || !!props.doneAt ? 1 : 0.4)};
   transition: opacity 500ms, color 500ms, border 500ms;
   border: ${DesignToken.todoEntry.selectBorder.width} solid
     ${props => (props.isSelected ? props.theme.primaryColor : 'transparent')};

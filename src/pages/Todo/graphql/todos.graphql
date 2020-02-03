@@ -1,0 +1,9 @@
+query Todos($date: String) {
+  todos(date: $date) {
+    id
+    title
+    createdAt
+    scheduledAt
+    doneAt
+  }
+}
