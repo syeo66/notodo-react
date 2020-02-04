@@ -45,15 +45,10 @@ const TodoEntry = styled(TodoEntryComponent)`
   padding: ${DesignToken.todoEntry.padding};
   color: ${props => (props.isSelected ? props.theme.primaryColor : props.theme.textColor)};
   opacity: ${props => (props.isSelected || !!props.doneAt ? 1 : 0.4)};
-  transition: opacity 500ms, color 500ms, border 500ms;
+  transition: opacity ${DesignToken.defaultTransitionLength}, color ${DesignToken.defaultTransitionLength},
+    border ${DesignToken.defaultTransitionLength};
   border: ${DesignToken.todoEntry.selectBorder.width} solid
     ${props => (props.isSelected ? props.theme.primaryColor : 'transparent')};
-
-  &:hover {
-    color: ${props => props.theme.secondaryColor};
-    border: ${DesignToken.todoEntry.selectBorder.width} solid ${props => props.theme.secondaryColor};
-    opacity: 1;
-  }
 `
 
 export default TodoEntry

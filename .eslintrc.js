@@ -21,7 +21,6 @@ module.exports = {
     'no-empty': 'error',
     'no-else-return': 'error',
     'no-shadow': 'error',
-    'no-unused-vars': 'error',
     'sort-vars': 'error',
     'prefer-destructuring': 'error',
     'simple-import-sort/sort': 'error',

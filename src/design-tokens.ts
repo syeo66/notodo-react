@@ -66,7 +66,7 @@ export const DesignToken = {
   defaultPadding: Padding.m,
   defaultBorderRadius: BorderRadius.m,
   defaultFontSize: FontSize.s,
-  defaultTransitionLength: TransitionLength.m,
+  defaultTransitionLength: TransitionLength.s,
 
   maxWidth: '1170px',
 
