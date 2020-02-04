@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { loader } from 'graphql.macro'
-import styled from 'styled-components'
 import { useQuery } from '@apollo/react-hooks'
-import { parseISO, format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
+import { loader } from 'graphql.macro'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
-import { DesignToken } from '../../design-tokens'
 import TodoEntry from '../../components/TodoEntry'
 import { DATE_FORMAT } from '../../constants'
+import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
 

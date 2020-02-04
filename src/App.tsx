@@ -1,12 +1,11 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react'
-import styled, { ThemeProvider } from 'styled-components'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import { ApolloProvider } from '@apollo/react-hooks'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import styled, { ThemeProvider } from 'styled-components'
 
 import { client } from './apollo'
-import { DesignToken } from './design-tokens'
 import Header from './components/Header'
-
+import { DesignToken } from './design-tokens'
 import darkTheme from './themes/dark'
 import defaultTheme from './themes/default'
 

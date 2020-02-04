@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { Color } from '../design-tokens'
 
 export default {

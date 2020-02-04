@@ -1,9 +1,9 @@
+import { format } from 'date-fns'
 import React from 'react'
 import styled from 'styled-components'
-import { format } from 'date-fns'
 
-import { DesignToken } from '../../design-tokens'
 import { TIME_FORMAT } from '../../constants'
+import { DesignToken } from '../../design-tokens'
 
 const EntryCell = styled.div`
   &:not(:first-child) {
@@ -30,7 +30,6 @@ interface TodoEntryComponentProps {
 }
 
 const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt }) => {
-  console.log(doneAt)
   return (
     <div className={className}>
       <TickCell>{!!doneAt && '✓'}</TickCell>

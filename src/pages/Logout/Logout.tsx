@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+
 import { AUTH_TOKEN } from '../../constants'
 
 const Logout = () => {

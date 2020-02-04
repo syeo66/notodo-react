@@ -1,7 +1,7 @@
-import { ApolloClient } from 'apollo-client'
-import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { ApolloClient } from 'apollo-client'
 import { setContext } from 'apollo-link-context'
+import { createHttpLink } from 'apollo-link-http'
 
 import { AUTH_TOKEN, GRAPHQL_API } from './constants'
 
@@ -19,4 +19,4 @@ const authLink = setContext((_, { headers }) => {
   }
 })
 
-export const client = new ApolloClient({ link: authLink.concat(httpLink), cache: new InMemoryCache() })
+export const client = new ApolloClient({ cache: new InMemoryCache(), link: authLink.concat(httpLink) })

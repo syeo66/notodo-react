@@ -1,3 +1,5 @@
+/* eslint-disable sort-keys */
+
 // Options
 export enum Color {
   heavyMetal = '#333533',

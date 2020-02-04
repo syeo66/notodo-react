@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import styled from 'styled-components'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
-import { Button } from '../Form'
 import { AUTH_TOKEN } from '../../constants'
+import { Button } from '../Form'
 
 interface HeaderComponentProps {
   className?: string

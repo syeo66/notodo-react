@@ -1,8 +1,9 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'simple-import-sort'],
   extends: [
+    'react-app',
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -12,5 +13,22 @@ module.exports = {
     ecmaVersion: 6,
     sourceType: 'module',
     ecmaFeatures: { modules: true },
+  },
+  rules: {
+    'sort-keys': 'error',
+    'no-console': 'error',
+    'prettier/prettier': 'error',
+    'no-empty': 'error',
+    'no-else-return': 'error',
+    'no-shadow': 'error',
+    'no-unused-vars': 'error',
+    'sort-vars': 'error',
+    'prefer-destructuring': 'error',
+    'simple-import-sort/sort': 'error',
+    'prefer-template': 'error',
+    complexity: 'warn',
+    eqeqeq: 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/member-delimiter-style': ['error', { multiline: { delimiter: 'none' } }],
   },
 }

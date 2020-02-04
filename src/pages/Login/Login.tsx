@@ -1,15 +1,14 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import { loader } from 'graphql.macro'
-import styled from 'styled-components'
 import { useLazyQuery } from '@apollo/react-hooks'
 import Color from 'color'
-
-import { Input, Label, Button } from '../../components/Form'
-
-import { DesignToken } from '../../design-tokens'
-import ErrorMessage from '../../components/ErrorMessage'
+import { loader } from 'graphql.macro'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+
+import ErrorMessage from '../../components/ErrorMessage'
+import { Button, Input, Label } from '../../components/Form'
 import { AUTH_TOKEN } from '../../constants'
+import { DesignToken } from '../../design-tokens'
 
 const loginQuery = loader('./graphql/login.graphql')
 
@@ -46,7 +45,7 @@ const Login = () => {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault()
-      loginAction({ variables: { username, password } })
+      loginAction({ variables: { password, username } })
     },
     [username, password, loginAction]
   )
