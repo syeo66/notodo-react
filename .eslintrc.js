@@ -26,7 +26,7 @@ module.exports = {
     'prefer-destructuring': 'error',
     'simple-import-sort/sort': 'error',
     'prefer-template': 'error',
-    complexity: 'warn',
+    complexity: ['warn', 7],
     eqeqeq: 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/member-delimiter-style': ['error', { multiline: { delimiter: 'none' } }],
