@@ -59,6 +59,11 @@ export enum BreakPoint {
   mobile = '768px',
 }
 
+export enum Font {
+  regular = "'TiredOfCourier W01 Regular', Courier, serif",
+  bold = "'TiredOfCourier W01 Bold', Courier, serif",
+}
+
 // Decisions
 export const DesignToken = {
   lineHeightFactor: 1.613,

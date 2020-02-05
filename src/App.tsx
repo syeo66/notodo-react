@@ -5,7 +5,7 @@ import styled, { ThemeProvider } from 'styled-components'
 
 import { client } from './apollo'
 import Header from './components/Header'
-import { DesignToken } from './design-tokens'
+import { DesignToken, Font } from './design-tokens'
 import darkTheme from './themes/dark'
 import defaultTheme from './themes/default'
 
@@ -13,6 +13,7 @@ const Login = lazy(() => import('./pages/Login'))
 const Logout = lazy(() => import('./pages/Logout'))
 const Registration = lazy(() => import('./pages/Registration'))
 const Todo = lazy(() => import('./pages/Todo'))
+const Home = lazy(() => import('./pages/Home'))
 
 const AppContainer = styled.div`
   display: flex;
@@ -21,6 +22,7 @@ const AppContainer = styled.div`
 
   color: ${props => props.theme.textColor};
   background-color: ${props => props.theme.backgroundColor};
+  font-family: ${Font.regular};
 
   padding: ${DesignToken.defaultPadding};
 `
@@ -59,7 +61,7 @@ const App: React.FC = () => {
                   <Route path="/logout" exact component={Logout} />
                   <Route path="/register" exact component={Registration} />
                   <Route path="/app" exact component={Todo} />
-                  <Route path="/" exact component={Login} />
+                  <Route path="/" exact component={Home} />
                 </Suspense>
               </Switch>
             </Main>

@@ -2,10 +2,11 @@ import { useQuery } from '@apollo/react-hooks'
 import { format, parseISO } from 'date-fns'
 import { loader } from 'graphql.macro'
 import React, { useCallback, useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import TodoEntry from '../../components/TodoEntry'
-import { DATE_FORMAT } from '../../constants'
+import { AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
@@ -29,6 +30,9 @@ const Todo: React.FC = () => {
   const [currentDate] = useState(new Date())
   const [selectedId, setSelectedId] = useState('')
   const [cursor, setCursor] = useState(0)
+
+  const history = useHistory()
+
   const { data } = useQuery(todosQuery)
 
   const todosLength = data && data.todos && data.todos.length
@@ -44,6 +48,12 @@ const Todo: React.FC = () => {
     },
     [cursor, todosLength]
   )
+
+  useEffect(() => {
+    if (!localStorage.getItem(AUTH_TOKEN)) {
+      history.push('/')
+    }
+  }, [history])
 
   // Make sure the cursor is never beyond the last entry
   useEffect(() => {

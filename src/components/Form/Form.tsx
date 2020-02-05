@@ -1,7 +1,7 @@
 import Color from 'color'
 import styled from 'styled-components'
 
-import { DesignToken } from '../../design-tokens'
+import { DesignToken, Font } from '../../design-tokens'
 
 export const Input = styled.input`
   background-color: ${props => props.theme.form.backgroundColor};
@@ -19,6 +19,7 @@ export const Input = styled.input`
   margin-bottom: ${DesignToken.form.marginBottom};
   outline: 0;
   transition: all ${DesignToken.defaultTransitionLength};
+  font-family: ${Font.regular};
 
   &:focus {
     color: ${props => props.theme.form.textColor};
@@ -30,6 +31,7 @@ export const Label = styled.label`
   font-size: ${DesignToken.defaultFontSize};
   line-height: calc(${DesignToken.defaultFontSize} * ${DesignToken.lineHeightFactor});
   display: block;
+  font-family: ${Font.regular};
 `
 
 export const Button = styled.button`
@@ -44,6 +46,8 @@ export const Button = styled.button`
   cursor: pointer;
   outline: 0;
   transition: all ${DesignToken.defaultTransitionLength};
+  font-family: ${Font.bold};
+
   box-shadow: 0 3px 4px
     ${props =>
       Color(props.theme.form.button.backgroundHoverColor)

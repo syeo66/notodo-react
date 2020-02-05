@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { AUTH_TOKEN } from '../../constants'
+import { Font } from '../../design-tokens'
 import { Button } from '../Form'
 
 interface HeaderComponentProps {
@@ -29,6 +30,7 @@ const OpacityHeader = styled.header`
 const HeaderTitle = styled.h1`
   margin: 0;
   padding: 0;
+  font-family: ${Font.bold};
 `
 
 const HeaderComponent: React.FC<HeaderComponentProps> = ({ className }) => {
