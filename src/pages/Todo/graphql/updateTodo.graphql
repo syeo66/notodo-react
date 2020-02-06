@@ -1,0 +1,8 @@
+mutation($id: ID, $todo: TodoInput!) {
+  updateTodo(id: $id, todo: $todo) {
+    id
+    title
+    scheduledAt
+    doneAt
+  }
+}

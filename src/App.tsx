@@ -53,7 +53,7 @@ const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <Router>
           <AppContainer>
-            <Header />
+            <Route path="/:path" component={Header} />
             <Main>
               <Switch>
                 <Suspense fallback={<></>}>

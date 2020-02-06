@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { format, parseISO } from 'date-fns'
 import { loader } from 'graphql.macro'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -10,6 +10,7 @@ import { AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
+const updateTodoMutation = loader('./graphql/updateTodo.graphql')
 
 const DateBar = styled.div`
   display: flex;
@@ -26,6 +27,16 @@ interface Todo {
   doneAt: string
 }
 
+enum KeyCode {
+  Up = 38,
+  Down = 40,
+  Space = 32,
+}
+
+interface SorterInput {
+  doneAt: string
+}
+
 const Todo: React.FC = () => {
   const [currentDate] = useState(new Date())
   const [selectedId, setSelectedId] = useState('')
@@ -34,19 +45,28 @@ const Todo: React.FC = () => {
   const history = useHistory()
 
   const { data } = useQuery(todosQuery)
+  const [updateTodo] = useMutation(updateTodoMutation)
 
   const todosLength = data && data.todos && data.todos.length
 
-  const handleKeyDown = useCallback(
+  const handleKey = useCallback(
     (e: KeyboardEvent) => {
-      if (e.keyCode === 38 && cursor > 0) {
+      if (e.keyCode === KeyCode.Space) {
+        updateTodo({
+          variables: {
+            id: selectedId,
+            todo: { doneAt: data.todos[cursor].doneAt === null ? new Date() : null, title: data?.todos[cursor].title },
+          },
+        })
+      }
+      if (e.keyCode === KeyCode.Up && cursor > 0) {
         setCursor(prev => prev - 1)
       }
-      if (e.keyCode === 40 && cursor < todosLength - 1) {
+      if (e.keyCode === KeyCode.Down && cursor < todosLength - 1) {
         setCursor(prev => prev + 1)
       }
     },
-    [cursor, todosLength]
+    [cursor, data, selectedId, todosLength, updateTodo]
   )
 
   useEffect(() => {
@@ -63,7 +83,7 @@ const Todo: React.FC = () => {
   }, [cursor, todosLength])
 
   // Choose the selectedId depending in the cursor position
-  // TODO: This should/could be done in handleKeyDown
+  // TODO: This should/could be done in handleKey
   useEffect(() => {
     if (data && data.todos && data.todos[cursor]) {
       setSelectedId(data.todos[cursor].id)
@@ -79,12 +99,12 @@ const Todo: React.FC = () => {
 
   // initialize the keyup event listeners
   useEffect(() => {
-    window.addEventListener('keyup', handleKeyDown)
+    window.addEventListener('keyup', handleKey)
 
     return () => {
-      window.removeEventListener('keyup', handleKeyDown)
+      window.removeEventListener('keyup', handleKey)
     }
-  }, [handleKeyDown])
+  }, [handleKey])
 
   return (
     <>

@@ -20,6 +20,7 @@ const TickCell = styled(EntryCell)`
 const TimeCell = styled(EntryCell)`
   width: 2rem;
   text-align: center;
+  padding-right: ${DesignToken.defaultPadding};
 `
 
 interface TodoEntryComponentProps {
@@ -32,7 +33,7 @@ interface TodoEntryComponentProps {
 const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt }) => {
   return (
     <div className={className}>
-      <TickCell>{!!doneAt && '✓'}</TickCell>
+      <TickCell>{doneAt ? '✓' : <>&nbsp;</>}</TickCell>
       <TimeCell>{!!doneAt && format(doneAt, TIME_FORMAT)}</TimeCell>
       <EntryCell>{title}</EntryCell>
     </div>
