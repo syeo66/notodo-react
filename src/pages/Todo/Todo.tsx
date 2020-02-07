@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { format, parseISO } from 'date-fns'
+import { addDays, format, isSameDay, parseISO, subDays } from 'date-fns'
 import { loader } from 'graphql.macro'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -30,7 +30,11 @@ interface Todo {
 enum KeyCode {
   Up = 38,
   Down = 40,
+  Left = 37,
+  Right = 39,
   Space = 32,
+  h = 72,
+  n = 78,
 }
 
 interface SorterInput {
@@ -38,13 +42,15 @@ interface SorterInput {
 }
 
 const Todo: React.FC = () => {
-  const [currentDate] = useState(new Date())
+  const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedId, setSelectedId] = useState('')
   const [cursor, setCursor] = useState(0)
 
   const history = useHistory()
 
-  const { data } = useQuery(todosQuery)
+  const { data } = useQuery(todosQuery, {
+    variables: { date: isSameDay(currentDate, new Date()) ? null : currentDate },
+  })
   const [updateTodo] = useMutation(updateTodoMutation)
 
   const todosLength = data && data.todos && data.todos.length
@@ -58,6 +64,15 @@ const Todo: React.FC = () => {
             todo: { doneAt: data.todos[cursor].doneAt === null ? new Date() : null, title: data?.todos[cursor].title },
           },
         })
+      }
+      if (e.keyCode === KeyCode.h) {
+        setCurrentDate(new Date())
+      }
+      if (e.keyCode === KeyCode.Left) {
+        setCurrentDate(prev => subDays(prev, 1))
+      }
+      if (e.keyCode === KeyCode.Right) {
+        setCurrentDate(prev => addDays(prev, 1))
       }
       if (e.keyCode === KeyCode.Up && cursor > 0) {
         setCursor(prev => prev - 1)
@@ -77,7 +92,7 @@ const Todo: React.FC = () => {
 
   // Make sure the cursor is never beyond the last entry
   useEffect(() => {
-    if (cursor > todosLength - 1) {
+    if (todosLength && cursor > todosLength - 1) {
       setCursor(todosLength - 1)
     }
   }, [cursor, todosLength])
