@@ -29,9 +29,9 @@ const Panel = styled.div`
 `
 
 const LoginPanel = styled(Panel)`
-  width: 100%;
+  width: calc(100% - ${DesignToken.defaultPadding} * 2);
   max-width: 20rem;
-  margin: 0 auto;
+  margin: ${DesignToken.defaultPadding} auto;
 `
 
 const Login = () => {

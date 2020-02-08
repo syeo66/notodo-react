@@ -1,15 +1,17 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { addDays, format, isSameDay, parseISO, subDays } from 'date-fns'
 import { loader } from 'graphql.macro'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
 import { AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
+const createTodoMutation = loader('./graphql/createTodo.graphql')
 const updateTodoMutation = loader('./graphql/updateTodo.graphql')
 
 const DateBar = styled.div`
@@ -28,36 +30,71 @@ interface Todo {
 }
 
 enum KeyCode {
+  Esc = 27,
   Up = 38,
   Down = 40,
   Left = 37,
   Right = 39,
   Space = 32,
+  c = 67,
   h = 72,
   n = 78,
-}
-
-interface SorterInput {
-  doneAt: string
 }
 
 const Todo: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedId, setSelectedId] = useState('')
   const [cursor, setCursor] = useState(0)
+  const [isCreating, setIsCreating] = useState(false)
+  const [todoText, setTodoText] = useState('')
 
   const history = useHistory()
 
-  const { data } = useQuery(todosQuery, {
+  const { data, refetch } = useQuery(todosQuery, {
     variables: { date: isSameDay(currentDate, new Date()) ? null : currentDate },
   })
   const [updateTodo] = useMutation(updateTodoMutation)
+  const [createTodo] = useMutation(createTodoMutation)
 
   const todosLength = data && data.todos && data.todos.length
 
+  const handleCreateTodo = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault()
+      if (!todoText || todoText.trim().length <= 0) {
+        return
+      }
+      createTodo({
+        variables: {
+          todo: {
+            scheduledAt: isSameDay(currentDate, new Date()) ? null : currentDate,
+            title: todoText.trim(),
+          },
+        },
+      }).then(() => {
+        refetch()
+      })
+    },
+    [createTodo, currentDate, refetch, todoText]
+  )
+
+  const handleNewTodoChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setTodoText(e.currentTarget.value.trim())
+  }, [])
+
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
+      if (e.keyCode === KeyCode.Esc) {
+        // cancel creation
+        setIsCreating(false)
+      }
+
+      if (isCreating) {
+        return
+      }
+
       if (e.keyCode === KeyCode.Space) {
+        // Space toggles done flag/date
         updateTodo({
           variables: {
             id: selectedId,
@@ -65,23 +102,16 @@ const Todo: React.FC = () => {
           },
         })
       }
-      if (e.keyCode === KeyCode.h) {
-        setCurrentDate(new Date())
+
+      if (e.keyCode === KeyCode.c || e.keyCode === KeyCode.n) {
+        // create a new todo
+        setIsCreating(true)
       }
-      if (e.keyCode === KeyCode.Left) {
-        setCurrentDate(prev => subDays(prev, 1))
-      }
-      if (e.keyCode === KeyCode.Right) {
-        setCurrentDate(prev => addDays(prev, 1))
-      }
-      if (e.keyCode === KeyCode.Up && cursor > 0) {
-        setCursor(prev => prev - 1)
-      }
-      if (e.keyCode === KeyCode.Down && cursor < todosLength - 1) {
-        setCursor(prev => prev + 1)
-      }
+
+      dateKeyCodeHandler({ keyCode: e.keyCode, setCurrentDate })
+      cursorKeyCodeHandler({ cursor, end: todosLength, keyCode: e.keyCode, setCursor })
     },
-    [cursor, data, selectedId, todosLength, updateTodo]
+    [cursor, data, isCreating, selectedId, todosLength, updateTodo]
   )
 
   useEffect(() => {
@@ -133,8 +163,49 @@ const Todo: React.FC = () => {
             isSelected={id === selectedId}
           />
         ))}
+      {isCreating && (
+        <form onSubmit={handleCreateTodo}>
+          <Label>
+            Create a New Todo
+            <Input autoFocus onChange={handleNewTodoChange} />
+          </Label>
+        </form>
+      )}
     </>
   )
+}
+
+type UseStateParam<T> = (param: T | ((state: T) => T)) => void
+
+const dateKeyCodeHandler = ({ keyCode, setCurrentDate }: { keyCode: number; setCurrentDate: UseStateParam<Date> }) => {
+  if (keyCode === KeyCode.h) {
+    setCurrentDate(new Date())
+  }
+  if (keyCode === KeyCode.Left) {
+    setCurrentDate(prev => subDays(prev, 1))
+  }
+  if (keyCode === KeyCode.Right) {
+    setCurrentDate(prev => addDays(prev, 1))
+  }
+}
+
+const cursorKeyCodeHandler = ({
+  keyCode,
+  cursor,
+  end,
+  setCursor,
+}: {
+  keyCode: number
+  cursor: number
+  end: number
+  setCursor: UseStateParam<number>
+}) => {
+  if (keyCode === KeyCode.Up && cursor > 0) {
+    setCursor(prev => prev - 1)
+  }
+  if (keyCode === KeyCode.Down && cursor < end - 1) {
+    setCursor(prev => prev + 1)
+  }
 }
 
 export default Todo
