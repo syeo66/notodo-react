@@ -143,7 +143,9 @@ const Todo: React.FC = () => {
   // onLoad select the first entry
   useEffect(() => {
     if (selectedId === '' && !!data && !!data.todos[0]) {
-      setSelectedId(data.todos[0].id)
+      const initialTodo = data.todos.find((t: { doneAt: string | null }) => !t.doneAt)
+      setSelectedId(initialTodo.id)
+      setCursor(data.todos.indexOf(initialTodo))
     }
   }, [selectedId, data])
 

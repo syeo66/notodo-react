@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { AUTH_TOKEN } from '../../constants'
 import { Font, FontSize } from '../../design-tokens'
 
 const HomeView = styled.div`
@@ -40,6 +42,18 @@ const HomeView = styled.div`
 `
 
 const Home = () => {
+  const history = useHistory()
+
+  useEffect(() => {
+    const to = setTimeout(() => {
+      const authToken = localStorage.getItem(AUTH_TOKEN)
+      if (authToken) {
+        history.push('/app')
+      }
+    }, 2500)
+    return () => clearTimeout(to)
+  }, [history])
+
   return (
     <HomeView>
       <div>ToNoToDo</div>
