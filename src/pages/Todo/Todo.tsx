@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
+import TodoList from '../../components/TodoList'
 import { AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
@@ -158,23 +159,25 @@ const Todo: React.FC = () => {
   return (
     <>
       <DateBar>⇐ {format(currentDate, DATE_FORMAT)} ⇒</DateBar>
-      {!!data &&
-        data.todos.map(({ id, title, doneAt }: Todo, pos: number) => (
-          <TodoEntry
-            key={id}
-            title={title}
-            doneAt={doneAt ? parseISO(doneAt) : undefined}
-            isSelected={id === selectedId}
-          />
-        ))}
-      {isCreating && (
-        <form onSubmit={handleCreateTodo}>
-          <Label>
-            Create a New Todo
-            <Input autoFocus onChange={handleNewTodoChange} />
-          </Label>
-        </form>
-      )}
+      <TodoList>
+        {!!data &&
+          data.todos.map(({ id, title, doneAt }: Todo, pos: number) => (
+            <TodoEntry
+              key={id}
+              title={title}
+              doneAt={doneAt ? parseISO(doneAt) : undefined}
+              isSelected={id === selectedId}
+            />
+          ))}
+        {isCreating && (
+          <form onSubmit={handleCreateTodo}>
+            <Label>
+              Create a New Todo
+              <Input autoFocus onChange={handleNewTodoChange} />
+            </Label>
+          </form>
+        )}
+      </TodoList>
     </>
   )
 }

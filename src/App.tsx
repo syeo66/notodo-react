@@ -16,9 +16,8 @@ const Todo = lazy(() => import('./pages/Todo'))
 const Home = lazy(() => import('./pages/Home'))
 
 const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100% - ${DesignToken.defaultPadding} * 2);
+  height: calc(100% - ${DesignToken.defaultPadding} * 2);
+  overflow: hidden;
 
   color: ${props => props.theme.textColor};
   background-color: ${props => props.theme.backgroundColor};
@@ -31,6 +30,9 @@ const Main = styled.main`
   max-width: ${DesignToken.maxWidth};
   width: 100%;
   margin: 0 auto;
+  height: calc(100% - ${DesignToken.defaultPadding} * 2);
+  display: flex;
+  flex-direction: column;
 `
 
 const App: React.FC = () => {

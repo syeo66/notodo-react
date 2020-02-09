@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 import { TIME_FORMAT } from '../../constants'
@@ -30,9 +30,28 @@ interface TodoEntryComponentProps {
   doneAt?: Date
 }
 
-const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt }) => {
+const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt, isSelected }) => {
+  const element = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (isSelected && element.current && element.current.parentElement) {
+      const currentPos = element.current?.offsetTop
+      const maxPos =
+        (element.current?.parentElement?.offsetHeight +
+          element.current?.parentElement?.offsetTop +
+          element.current?.offsetHeight) /
+        2
+
+      element.current?.parentElement?.scrollTo({
+        behavior: 'smooth',
+        left: 0,
+        top: currentPos - maxPos,
+      })
+    }
+  }, [isSelected])
+
   return (
-    <div className={className}>
+    <div className={className} ref={element}>
       <TickCell>{doneAt ? '✓' : <>&nbsp;</>}</TickCell>
       <TimeCell>{!!doneAt && format(doneAt, TIME_FORMAT)}</TimeCell>
       <EntryCell>{title}</EntryCell>
