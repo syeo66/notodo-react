@@ -84,21 +84,25 @@ const Todo: React.FC = () => {
 
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
+      const now = new Date()
+      Object.freeze(now)
+
       if (e.keyCode === KeyCode.Esc) {
         // cancel creation
         setIsCreating(false)
       }
 
       if (isCreating) {
+        // stop capturing key if we create a new todo
         return
       }
 
-      if (e.keyCode === KeyCode.Space) {
+      if (isSameDay(now, currentDate) && e.keyCode === KeyCode.Space) {
         // Space toggles done flag/date
         updateTodo({
           variables: {
             id: selectedId,
-            todo: { doneAt: data.todos[cursor].doneAt === null ? new Date() : null, title: data?.todos[cursor].title },
+            todo: { doneAt: data.todos[cursor].doneAt === null ? now : null, title: data?.todos[cursor].title },
           },
         })
       }
@@ -111,7 +115,7 @@ const Todo: React.FC = () => {
       dateKeyCodeHandler({ keyCode: e.keyCode, setCurrentDate })
       cursorKeyCodeHandler({ cursor, end: todosLength, keyCode: e.keyCode, setCursor })
     },
-    [cursor, data, isCreating, selectedId, todosLength, updateTodo]
+    [currentDate, cursor, data, isCreating, selectedId, todosLength, updateTodo]
   )
 
   useEffect(() => {
