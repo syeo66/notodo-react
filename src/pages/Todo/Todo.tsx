@@ -52,6 +52,14 @@ const Todo: React.FC = () => {
   const history = useHistory()
 
   const { data, refetch } = useQuery(todosQuery, {
+    onCompleted: loadedData => {
+      const initialTodo = loadedData.todos.find((t: { doneAt: string | null }) => !t.doneAt)
+      if (!initialTodo) {
+        return
+      }
+      setSelectedId(initialTodo.id)
+      setCursor(data.todos.indexOf(initialTodo))
+    },
     variables: { date: isSameDay(currentDate, new Date()) ? null : currentDate },
   })
   const [updateTodo] = useMutation(updateTodoMutation)
@@ -74,6 +82,8 @@ const Todo: React.FC = () => {
         },
       }).then(() => {
         refetch()
+        setTodoText('')
+        setIsCreating(false)
       })
     },
     [createTodo, currentDate, refetch, todoText]
@@ -82,6 +92,17 @@ const Todo: React.FC = () => {
   const handleNewTodoChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTodoText(e.currentTarget.value.trim())
   }, [])
+
+  const handleRepeatableKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (isCreating) {
+        // stop capturing key if we create a new todo
+        return
+      }
+      cursorKeyCodeHandler({ cursor, end: todosLength, keyCode: e.keyCode, setCursor })
+    },
+    [cursor, isCreating, todosLength]
+  )
 
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
@@ -114,9 +135,8 @@ const Todo: React.FC = () => {
       }
 
       dateKeyCodeHandler({ keyCode: e.keyCode, setCurrentDate })
-      cursorKeyCodeHandler({ cursor, end: todosLength, keyCode: e.keyCode, setCursor })
     },
-    [currentDate, cursor, data, isCreating, selectedId, todosLength, updateTodo]
+    [currentDate, cursor, data, isCreating, selectedId, updateTodo]
   )
 
   useEffect(() => {
@@ -140,23 +160,16 @@ const Todo: React.FC = () => {
     }
   }, [cursor, data])
 
-  // onLoad select the first entry
-  useEffect(() => {
-    if (selectedId === '' && !!data && !!data.todos[0]) {
-      const initialTodo = data.todos.find((t: { doneAt: string | null }) => !t.doneAt)
-      setSelectedId(initialTodo.id)
-      setCursor(data.todos.indexOf(initialTodo))
-    }
-  }, [selectedId, data])
-
   // initialize the keyup event listeners
   useEffect(() => {
     window.addEventListener('keyup', handleKey)
+    window.addEventListener('keydown', handleRepeatableKey)
 
     return () => {
       window.removeEventListener('keyup', handleKey)
+      window.removeEventListener('keydown', handleRepeatableKey)
     }
-  }, [handleKey])
+  }, [handleKey, handleRepeatableKey])
 
   return (
     <>
