@@ -39,6 +39,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "https://tonotodo.com",
   "eslintConfig": {
     "extends": "react-app"
   },
