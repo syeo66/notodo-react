@@ -91,6 +91,10 @@ export const DesignToken = {
       padding: `${Padding.xs} ${Padding.s}`,
       marginTop: Padding.xs,
       marginBottom: Padding.xxs,
+
+      small: {
+        padding: `${Padding.xxs} ${Padding.xs}`,
+      },
     },
   },
 

@@ -5,7 +5,7 @@ import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Input, Label } from '../../components/Form'
+import { Button, Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
 import TodoList from '../../components/TodoList'
 import { AUTH_TOKEN, DATE_FORMAT } from '../../constants'
@@ -18,8 +18,13 @@ const updateTodoMutation = loader('./graphql/updateTodo.graphql')
 const DateBar = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: ${DesignToken.dateHeader.padding};
   font-size: ${DesignToken.dateHeader.fontSize};
+`
+
+const DateBarButton = styled(Button)`
+  margin: 0 1rem;
 `
 
 interface Todo {
@@ -139,6 +144,9 @@ const Todo: React.FC = () => {
     [currentDate, cursor, data, isCreating, selectedId, updateTodo]
   )
 
+  const handlePrevDate = useCallback(() => setCurrentDate(prev => subDays(prev, 1)), [])
+  const handleNextDate = useCallback(() => setCurrentDate(prev => addDays(prev, 1)), [])
+
   useEffect(() => {
     if (!localStorage.getItem(AUTH_TOKEN)) {
       history.push('/')
@@ -173,7 +181,15 @@ const Todo: React.FC = () => {
 
   return (
     <>
-      <DateBar>⇐ {format(currentDate, DATE_FORMAT)} ⇒</DateBar>
+      <DateBar>
+        <DateBarButton small onClick={handlePrevDate}>
+          ⇐
+        </DateBarButton>
+        {format(currentDate, DATE_FORMAT)}
+        <DateBarButton small onClick={handleNextDate}>
+          ⇒
+        </DateBarButton>
+      </DateBar>
       <TodoList>
         {!!data &&
           data.todos.map(({ id, title, doneAt }: Todo, pos: number) => (

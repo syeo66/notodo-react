@@ -40,7 +40,8 @@ export const Button = styled.button`
   background-color: ${props => props.theme.form.button.backgroundColor};
   color: ${props => props.theme.form.button.textColor};
   font-size: ${DesignToken.form.fontSize};
-  padding: ${DesignToken.form.button.padding};
+  padding: ${(props: { small?: boolean }) =>
+    props.small ? DesignToken.form.button.small.padding : DesignToken.form.button.padding};
   margin-top: ${DesignToken.form.button.marginTop};
   margin-bottom: ${DesignToken.form.button.marginBottom};
   cursor: pointer;
