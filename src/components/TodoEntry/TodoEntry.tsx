@@ -1,3 +1,4 @@
+import Color from 'color'
 import { format } from 'date-fns'
 import React, { useLayoutEffect, useRef } from 'react'
 import styled from 'styled-components'
@@ -14,8 +15,24 @@ const EntryCell = styled.div`
 const TickCell = styled(EntryCell)`
   width: 1rem;
   flex-shrink: 0;
-  font-size: 130%;
   text-align: center;
+`
+
+const Tick = styled.button<{ highlight?: boolean }>`
+  color: ${props => (props.highlight ? 'inherit' : props.theme.backgroundColor)};
+  background-color: ${props =>
+    Color(props.theme.textColor)
+      .alpha(0.2)
+      .toString()};
+  border-radius: 100%;
+  width: 1.2em;
+  height: 1.2em;
+  border: 0 none transparent;
+  font-size: 120%;
+  lineheight: 1.2em;
+  padding: 0;
+  outline: 0;
+  cursor: pointer;
 `
 
 const TimeCell = styled(EntryCell)`
@@ -36,9 +53,10 @@ interface TodoEntryComponentProps {
   className?: string
   isSelected?: boolean
   doneAt?: Date
+  onSelect?: () => void
 }
 
-const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt, isSelected }) => {
+const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt, isSelected, onSelect }) => {
   const element = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -60,7 +78,11 @@ const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, classNam
 
   return (
     <div className={className} ref={element}>
-      <TickCell>{doneAt ? '✓' : <>&nbsp;</>}</TickCell>
+      <TickCell>
+        <Tick onClick={onSelect} highlight={!!doneAt}>
+          ✓
+        </Tick>
+      </TickCell>
       <TimeCell>{!!doneAt && format(doneAt, TIME_FORMAT)}</TimeCell>
       <TextCell>{title}</TextCell>
     </div>

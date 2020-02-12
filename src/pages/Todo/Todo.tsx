@@ -109,11 +109,29 @@ const Todo: React.FC = () => {
     [cursor, isCreating, todosLength]
   )
 
-  const handleKey = useCallback(
-    (e: KeyboardEvent) => {
+  const handleDoneToggle = useCallback(
+    (id?: string, pos?: number) => {
       const now = new Date()
       Object.freeze(now)
 
+      if (isSameDay(now, currentDate)) {
+        // Space toggles done flag/date
+        updateTodo({
+          variables: {
+            id: id || selectedId,
+            todo: {
+              doneAt: data.todos[pos || cursor].doneAt === null ? now : null,
+              title: data?.todos[pos || cursor].title,
+            },
+          },
+        })
+      }
+    },
+    [currentDate, cursor, data, selectedId, updateTodo]
+  )
+
+  const handleKey = useCallback(
+    (e: KeyboardEvent) => {
       if (e.keyCode === KeyCode.Esc) {
         // cancel creation
         setIsCreating(false)
@@ -124,14 +142,9 @@ const Todo: React.FC = () => {
         return
       }
 
-      if (isSameDay(now, currentDate) && e.keyCode === KeyCode.Space) {
+      if (e.keyCode === KeyCode.Space) {
         // Space toggles done flag/date
-        updateTodo({
-          variables: {
-            id: selectedId,
-            todo: { doneAt: data.todos[cursor].doneAt === null ? now : null, title: data?.todos[cursor].title },
-          },
-        })
+        handleDoneToggle()
       }
 
       if (e.keyCode === KeyCode.c || e.keyCode === KeyCode.n) {
@@ -141,7 +154,7 @@ const Todo: React.FC = () => {
 
       dateKeyCodeHandler({ keyCode: e.keyCode, setCurrentDate })
     },
-    [currentDate, cursor, data, isCreating, selectedId, updateTodo]
+    [handleDoneToggle, isCreating]
   )
 
   const handlePrevDate = useCallback(() => setCurrentDate(prev => subDays(prev, 1)), [])
@@ -192,14 +205,23 @@ const Todo: React.FC = () => {
       </DateBar>
       <TodoList>
         {!!data &&
-          data.todos.map(({ id, title, doneAt }: Todo, pos: number) => (
-            <TodoEntry
-              key={id}
-              title={title}
-              doneAt={doneAt ? parseISO(doneAt) : undefined}
-              isSelected={id === selectedId}
-            />
-          ))}
+          data.todos.map(({ id, title, doneAt }: Todo, pos: number) => {
+            const handleTodoToggle = () => {
+              setSelectedId(id)
+              setCursor(pos)
+              handleDoneToggle(id, pos)
+            }
+
+            return (
+              <TodoEntry
+                key={id}
+                title={title}
+                doneAt={doneAt ? parseISO(doneAt) : undefined}
+                onSelect={handleTodoToggle}
+                isSelected={id === selectedId}
+              />
+            )
+          })}
         {isCreating && (
           <form onSubmit={handleCreateTodo}>
             <Label>
