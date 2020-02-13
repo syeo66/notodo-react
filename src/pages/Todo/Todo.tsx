@@ -50,6 +50,8 @@ enum KeyCode {
 const Todo: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedId, setSelectedId] = useState('')
+
+  // TODO: get rid of the cursor -> only use the id
   const [cursor, setCursor] = useState(0)
   const [isCreating, setIsCreating] = useState(false)
   const [todoText, setTodoText] = useState('')
@@ -115,13 +117,12 @@ const Todo: React.FC = () => {
       Object.freeze(now)
 
       if (isSameDay(now, currentDate)) {
-        // Space toggles done flag/date
+        //  toggles done flag/date
         updateTodo({
           variables: {
             id: id || selectedId,
             todo: {
               doneAt: data.todos[pos || cursor].doneAt === null ? now : null,
-              title: data?.todos[pos || cursor].title,
             },
           },
         })
