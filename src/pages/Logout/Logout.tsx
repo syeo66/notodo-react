@@ -8,7 +8,7 @@ const Logout = () => {
 
   useEffect(() => {
     localStorage.removeItem(AUTH_TOKEN)
-    history.push('/login')
+    history.push('/')
   }, [history])
 
   return <>Bye-bye</>

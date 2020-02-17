@@ -34,6 +34,26 @@ const LoginPanel = styled(Panel)`
   margin: ${DesignToken.defaultPadding} auto;
 `
 
+const LoginWrapper = styled.section`
+  display: flex;
+  jusitfy-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  animation: grow 1s;
+  transform: translate(0%);
+
+  @keyframes grow {
+    from {
+      transform: translate(-100%);
+    }
+
+    to {
+      transform: translate(0%);
+    }
+  }
+`
+
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -62,28 +82,30 @@ const Login = () => {
   }, [data, history])
 
   return (
-    <LoginPanel>
-      {error && <ErrorMessage>Please check your credentials and try again.</ErrorMessage>}
-      <form onSubmit={handleSubmit}>
-        <Label>
-          Username
-          <Input name="username" value={username} placeholder={'the_guy'} onChange={handleUsernameChange} autoFocus />
-        </Label>
-        <Label>
-          Password
-          <Input
-            type="password"
-            name="password"
-            value={password}
-            placeholder={'your-secure-password'}
-            onChange={handlePasswordChange}
-          />
-        </Label>
-        <Button disabled={loading || password === '' || username === ''} type="submit">
-          {!loading ? 'Login' : 'Logging in...'}
-        </Button>
-      </form>
-    </LoginPanel>
+    <LoginWrapper>
+      <LoginPanel>
+        {error && <ErrorMessage>Please check your credentials and try again.</ErrorMessage>}
+        <form onSubmit={handleSubmit}>
+          <Label>
+            Username
+            <Input name="username" value={username} placeholder={'the_guy'} onChange={handleUsernameChange} autoFocus />
+          </Label>
+          <Label>
+            Password
+            <Input
+              type="password"
+              name="password"
+              value={password}
+              placeholder={'your-secure-password'}
+              onChange={handlePasswordChange}
+            />
+          </Label>
+          <Button disabled={loading || password === '' || username === ''} type="submit">
+            {!loading ? 'Login' : 'Logging in...'}
+          </Button>
+        </form>
+      </LoginPanel>
+    </LoginWrapper>
   )
 }
 
