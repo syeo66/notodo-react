@@ -160,6 +160,7 @@ const Todo: React.FC = () => {
 
   const handlePrevDate = useCallback(() => setCurrentDate(prev => subDays(prev, 1)), [])
   const handleNextDate = useCallback(() => setCurrentDate(prev => addDays(prev, 1)), [])
+  const handleCurrentDate = useCallback(() => setCurrentDate(new Date()), [])
 
   useEffect(() => {
     if (!localStorage.getItem(AUTH_TOKEN)) {
@@ -199,7 +200,7 @@ const Todo: React.FC = () => {
         <DateBarButton small onClick={handlePrevDate}>
           ⇐
         </DateBarButton>
-        {format(currentDate, DATE_FORMAT)}
+        <span onDoubleClick={handleCurrentDate}>{format(currentDate, DATE_FORMAT)}</span>
         <DateBarButton small onClick={handleNextDate}>
           ⇒
         </DateBarButton>
