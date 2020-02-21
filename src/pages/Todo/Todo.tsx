@@ -27,6 +27,25 @@ const DateBarButton = styled(Button)`
   margin: 0 1rem;
 `
 
+const NewTodoBar = styled.div`
+  display: flex;
+  align-items: center;
+
+  ${Button} {
+    margin-right: ${DesignToken.defaultPadding};
+  }
+
+  form {
+    width: 100%;
+  }
+`
+
+const AddButton = styled(Button)`
+  position: fixed;
+  bottom: ${DesignToken.defaultPadding};
+  right: ${DesignToken.defaultPadding};
+`
+
 interface Todo {
   id: string
   title: string
@@ -161,6 +180,8 @@ const Todo: React.FC = () => {
   const handlePrevDate = useCallback(() => setCurrentDate(prev => subDays(prev, 1)), [])
   const handleNextDate = useCallback(() => setCurrentDate(prev => addDays(prev, 1)), [])
   const handleCurrentDate = useCallback(() => setCurrentDate(new Date()), [])
+  const handleAddTodo = useCallback(() => setIsCreating(true), [])
+  const handleCloseTodo = useCallback(() => setIsCreating(false), [])
 
   useEffect(() => {
     if (!localStorage.getItem(AUTH_TOKEN)) {
@@ -225,14 +246,22 @@ const Todo: React.FC = () => {
             )
           })}
         {isCreating && (
-          <form onSubmit={handleCreateTodo}>
-            <Label>
-              Create a New Todo
-              <Input autoFocus onChange={handleNewTodoChange} />
-            </Label>
-          </form>
+          <NewTodoBar>
+            <Button title="Cancel" onClick={handleCloseTodo}>
+              x
+            </Button>
+            <form onSubmit={handleCreateTodo}>
+              <Label>
+                Create a New Todo
+                <Input autoFocus onChange={handleNewTodoChange} />
+              </Label>
+            </form>
+          </NewTodoBar>
         )}
       </TodoList>
+      <AddButton onClick={handleAddTodo} title="Add entry">
+        +
+      </AddButton>
     </>
   )
 }
