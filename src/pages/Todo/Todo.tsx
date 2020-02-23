@@ -259,9 +259,11 @@ const Todo: React.FC = () => {
           </NewTodoBar>
         )}
       </TodoList>
-      <AddButton onClick={handleAddTodo} title="Add entry">
-        +
-      </AddButton>
+      {!isCreating && (
+        <AddButton onClick={handleAddTodo} title="Add entry">
+          +
+        </AddButton>
+      )}
     </>
   )
 }
