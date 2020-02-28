@@ -29,7 +29,7 @@ const Tick = styled.button<{ highlight?: boolean }>`
   height: 1.2em;
   border: 0 none transparent;
   font-size: 120%;
-  lineheight: 1.2em;
+  line-height: 0;
   padding: 0;
   outline: 0;
   cursor: pointer;
