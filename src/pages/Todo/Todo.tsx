@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { addDays, format, isSameDay, parseISO, subDays } from 'date-fns'
+import { isAfter } from 'date-fns/esm'
 import { loader } from 'graphql.macro'
 import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -8,7 +9,7 @@ import styled from 'styled-components'
 import { Button, Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
 import TodoList from '../../components/TodoList'
-import { AUTH_TOKEN, DATE_FORMAT } from '../../constants'
+import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
@@ -214,6 +215,18 @@ const Todo: React.FC = () => {
       window.removeEventListener('keydown', handleRepeatableKey)
     }
   }, [handleKey, handleRepeatableKey])
+
+  useEffect(() => {
+    const i = setInterval(() => {
+      const tokenExpiry = localStorage.getItem(AUTH_EXPIRY)
+
+      if ((!tokenExpiry && localStorage.getItem(AUTH_TOKEN)) || isAfter(new Date(), new Date(tokenExpiry || ''))) {
+        localStorage.removeItem(AUTH_TOKEN)
+        history.push('/')
+      }
+    }, 5000)
+    return () => clearInterval(i)
+  }, [history])
 
   return (
     <>

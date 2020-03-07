@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import ErrorMessage from '../../components/ErrorMessage'
 import { Button, Input, Label } from '../../components/Form'
-import { AUTH_TOKEN } from '../../constants'
+import { AUTH_EXPIRY, AUTH_TOKEN, REFRESH_EXPIRY, REFRESH_TOKEN } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const loginQuery = loader('./graphql/login.graphql')
@@ -75,6 +75,9 @@ const Login = () => {
   useEffect(() => {
     if (data && data.login && data.login.token) {
       localStorage.setItem(AUTH_TOKEN, data.login.token)
+      localStorage.setItem(AUTH_EXPIRY, data.login.tokenExpiry)
+      localStorage.setItem(REFRESH_TOKEN, data.login.refreshToken)
+      localStorage.setItem(REFRESH_EXPIRY, data.login.refreshTokenExpiry)
     }
     if (localStorage.getItem(AUTH_TOKEN)) {
       history.push('/app')
