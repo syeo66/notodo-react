@@ -229,7 +229,7 @@ const Todo: React.FC = () => {
       const currentRefreshToken = localStorage.getItem(REFRESH_TOKEN)
 
       // refresh token when expiry is within the next 3 minutes
-      if (currentRefreshToken && isAfter(sub(new Date(), { minutes: 3 }), new Date(tokenExpiry || ''))) {
+      if (currentRefreshToken && isAfter(new Date(), sub(new Date(tokenExpiry || ''), { minutes: 3 }))) {
         doRefreshToken({ variables: { refreshToken: currentRefreshToken } })
       }
 
