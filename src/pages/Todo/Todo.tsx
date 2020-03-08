@@ -184,12 +184,6 @@ const Todo: React.FC = () => {
   const handleAddTodo = useCallback(() => setIsCreating(true), [])
   const handleCloseTodo = useCallback(() => setIsCreating(false), [])
 
-  useEffect(() => {
-    if (!localStorage.getItem(AUTH_TOKEN)) {
-      history.push('/')
-    }
-  }, [history])
-
   // Make sure the cursor is never beyond the last entry
   useEffect(() => {
     if (todosLength && cursor > todosLength - 1) {
@@ -197,8 +191,6 @@ const Todo: React.FC = () => {
     }
   }, [cursor, todosLength])
 
-  // Choose the selectedId depending in the cursor position
-  // TODO: This should/could be done in handleKey
   useEffect(() => {
     if (data && data.todos && data.todos[cursor]) {
       setSelectedId(data.todos[cursor].id)
@@ -217,10 +209,15 @@ const Todo: React.FC = () => {
   }, [handleKey, handleRepeatableKey])
 
   useEffect(() => {
+    // TODO: make token handling more generic
     const i = setInterval(() => {
       const tokenExpiry = localStorage.getItem(AUTH_EXPIRY)
 
-      if ((!tokenExpiry && localStorage.getItem(AUTH_TOKEN)) || isAfter(new Date(), new Date(tokenExpiry || ''))) {
+      if (
+        !localStorage.getItem(AUTH_TOKEN) ||
+        (!tokenExpiry && localStorage.getItem(AUTH_TOKEN)) ||
+        isAfter(new Date(), new Date(tokenExpiry || ''))
+      ) {
         localStorage.removeItem(AUTH_TOKEN)
         history.push('/')
       }
