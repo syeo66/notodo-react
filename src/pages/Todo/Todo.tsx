@@ -95,6 +95,7 @@ const Todo: React.FC = () => {
   const [createTodo] = useMutation(createTodoMutation)
 
   const [doRefreshToken] = useLazyQuery(refreshTokenQuery, {
+    fetchPolicy: 'network-only',
     onCompleted: loadedData => {
       if (loadedData?.refresh?.token) {
         const { token, tokenExpiry, refreshToken: newRefreshToken, refreshTokenExpiry } = loadedData.refresh
