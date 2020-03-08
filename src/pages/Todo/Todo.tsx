@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
 import { addDays, format, isSameDay, parseISO, subDays } from 'date-fns'
-import { isAfter } from 'date-fns/esm'
+import { isAfter, sub } from 'date-fns/esm'
 import { loader } from 'graphql.macro'
 import React, { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -9,10 +9,11 @@ import styled from 'styled-components'
 import { Button, Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
 import TodoList from '../../components/TodoList'
-import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT } from '../../constants'
+import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT, REFRESH_EXPIRY, REFRESH_TOKEN } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
+const refreshTokenQuery = loader('./graphql/refreshToken.graphql')
 const createTodoMutation = loader('./graphql/createTodo.graphql')
 const updateTodoMutation = loader('./graphql/updateTodo.graphql')
 
@@ -89,8 +90,21 @@ const Todo: React.FC = () => {
     },
     variables: { date: isSameDay(currentDate, new Date()) ? null : currentDate },
   })
+
   const [updateTodo] = useMutation(updateTodoMutation)
   const [createTodo] = useMutation(createTodoMutation)
+
+  const [doRefreshToken] = useLazyQuery(refreshTokenQuery, {
+    onCompleted: loadedData => {
+      if (loadedData?.refresh?.token) {
+        const { token, tokenExpiry, refreshToken: newRefreshToken, refreshTokenExpiry } = loadedData.refresh
+        localStorage.setItem(AUTH_TOKEN, token)
+        localStorage.setItem(AUTH_EXPIRY, tokenExpiry)
+        localStorage.setItem(REFRESH_TOKEN, newRefreshToken)
+        localStorage.setItem(REFRESH_EXPIRY, refreshTokenExpiry)
+      }
+    },
+  })
 
   const todosLength = data && data.todos && data.todos.length
 
@@ -209,10 +223,17 @@ const Todo: React.FC = () => {
   }, [handleKey, handleRepeatableKey])
 
   useEffect(() => {
-    // TODO: make token handling more generic
+    // TODO: make token handling generic
     const i = setInterval(() => {
       const tokenExpiry = localStorage.getItem(AUTH_EXPIRY)
+      const currentRefreshToken = localStorage.getItem(REFRESH_TOKEN)
 
+      // refresh token when expiry is within the next 3 minutes
+      if (currentRefreshToken && isAfter(sub(new Date(), { minutes: 3 }), new Date(tokenExpiry || ''))) {
+        doRefreshToken({ variables: { refreshToken: currentRefreshToken } })
+      }
+
+      // Logout if no AUTH_TOKEN is available or it has been expired
       if (
         !localStorage.getItem(AUTH_TOKEN) ||
         (!tokenExpiry && localStorage.getItem(AUTH_TOKEN)) ||
@@ -223,7 +244,7 @@ const Todo: React.FC = () => {
       }
     }, 5000)
     return () => clearInterval(i)
-  }, [history])
+  }, [history, doRefreshToken])
 
   return (
     <>
