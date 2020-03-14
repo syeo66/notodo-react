@@ -8,7 +8,7 @@ import { GraphQLError } from 'graphql'
 
 import { AUTH_EXPIRY, AUTH_TOKEN, GRAPHQL_API, REFRESH_EXPIRY, REFRESH_TOKEN } from './constants'
 
-const httpLink = createHttpLink({ uri: GRAPHQL_API })
+const httpLink = createHttpLink({ credentials: 'include', uri: GRAPHQL_API })
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists

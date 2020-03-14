@@ -2,7 +2,5 @@ query Refresh($refreshToken: String!) {
   refresh(refreshToken: $refreshToken) {
     token
     tokenExpiry
-    refreshToken
-    refreshTokenExpiry
   }
 }
