@@ -1,5 +1,5 @@
-query Refresh($refreshToken: String!) {
-  refresh(refreshToken: $refreshToken) {
+query Refresh {
+  refresh {
     token
     tokenExpiry
   }

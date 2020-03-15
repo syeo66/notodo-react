@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { Button, Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
 import TodoList from '../../components/TodoList'
-import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT, REFRESH_EXPIRY, REFRESH_TOKEN } from '../../constants'
+import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const todosQuery = loader('./graphql/todos.graphql')
@@ -98,12 +98,24 @@ const Todo: React.FC = () => {
     fetchPolicy: 'network-only',
     onCompleted: loadedData => {
       if (loadedData?.refresh?.token) {
-        const { token, tokenExpiry, refreshToken: newRefreshToken, refreshTokenExpiry } = loadedData.refresh
+        const { token, tokenExpiry } = loadedData.refresh
         localStorage.setItem(AUTH_TOKEN, token)
         localStorage.setItem(AUTH_EXPIRY, tokenExpiry)
-        localStorage.setItem(REFRESH_TOKEN, newRefreshToken)
-        localStorage.setItem(REFRESH_EXPIRY, refreshTokenExpiry)
+
+        // Logout if no AUTH_TOKEN is available or it has been expired
+        if (
+          !localStorage.getItem(AUTH_TOKEN) ||
+          (!tokenExpiry && localStorage.getItem(AUTH_TOKEN)) ||
+          isAfter(new Date(), new Date(tokenExpiry || ''))
+        ) {
+          localStorage.removeItem(AUTH_TOKEN)
+          history.push('/')
+        }
       }
+    },
+    onError: () => {
+      localStorage.removeItem(AUTH_TOKEN)
+      history.push('/')
     },
   })
 
@@ -227,21 +239,10 @@ const Todo: React.FC = () => {
     // TODO: make token handling generic
     const i = setInterval(() => {
       const tokenExpiry = localStorage.getItem(AUTH_EXPIRY)
-      const currentRefreshToken = localStorage.getItem(REFRESH_TOKEN)
 
       // refresh token when expiry is within the next 3 minutes
-      if (currentRefreshToken && isAfter(new Date(), sub(new Date(tokenExpiry || ''), { minutes: 3 }))) {
-        doRefreshToken({ variables: { refreshToken: currentRefreshToken } })
-      }
-
-      // Logout if no AUTH_TOKEN is available or it has been expired
-      if (
-        !localStorage.getItem(AUTH_TOKEN) ||
-        (!tokenExpiry && localStorage.getItem(AUTH_TOKEN)) ||
-        isAfter(new Date(), new Date(tokenExpiry || ''))
-      ) {
-        localStorage.removeItem(AUTH_TOKEN)
-        history.push('/')
+      if (tokenExpiry && isAfter(new Date(), sub(new Date(tokenExpiry || ''), { minutes: 3 }))) {
+        doRefreshToken()
       }
     }, 5000)
     return () => clearInterval(i)
