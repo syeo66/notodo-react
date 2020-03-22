@@ -115,6 +115,7 @@ const Todo: React.FC = () => {
     },
     onError: () => {
       localStorage.removeItem(AUTH_TOKEN)
+      localStorage.removeItem(AUTH_EXPIRY)
       history.push('/')
     },
   })
