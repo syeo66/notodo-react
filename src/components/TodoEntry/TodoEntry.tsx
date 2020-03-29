@@ -1,9 +1,10 @@
 import Color from 'color'
+import CryptoJS from 'crypto-js'
 import { format } from 'date-fns'
 import React, { useLayoutEffect, useRef } from 'react'
 import styled from 'styled-components'
 
-import { TIME_FORMAT } from '../../constants'
+import { ENCRYPTION_KEY, TIME_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const EntryCell = styled.div`
@@ -58,6 +59,12 @@ interface TodoEntryComponentProps {
 
 const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, className, doneAt, isSelected, onSelect }) => {
   const element = useRef<HTMLDivElement>(null)
+  const testEncryption = /\$\$\$enc\$\$\$:/
+  const content = testEncryption.test(title)
+    ? CryptoJS.enc.Utf8.stringify(
+        CryptoJS.AES.decrypt(title.replace(testEncryption, ''), localStorage.getItem(ENCRYPTION_KEY) || '')
+      )
+    : title
 
   useLayoutEffect(() => {
     if (isSelected && element.current && element.current.parentElement) {
@@ -84,7 +91,7 @@ const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, classNam
         </Tick>
       </TickCell>
       <TimeCell>{!!doneAt && format(doneAt, TIME_FORMAT)}</TimeCell>
-      <TextCell>{title}</TextCell>
+      <TextCell>{content}</TextCell>
     </div>
   )
 }

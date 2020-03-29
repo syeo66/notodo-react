@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/react-hooks'
 import Color from 'color'
+import CryptoJS from 'crypto-js'
 import { loader } from 'graphql.macro'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -7,7 +8,7 @@ import styled from 'styled-components'
 
 import ErrorMessage from '../../components/ErrorMessage'
 import { Button, Input, Label } from '../../components/Form'
-import { AUTH_EXPIRY, AUTH_TOKEN } from '../../constants'
+import { AUTH_EXPIRY, AUTH_TOKEN, ENCRYPTION_KEY } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const loginQuery = loader('./graphql/login.graphql')
@@ -74,13 +75,17 @@ const Login = () => {
 
   useEffect(() => {
     if (data && data.login && data.login.token) {
+      const encryptionKey = CryptoJS.enc.Base64.stringify(
+        CryptoJS.PBKDF2(password, username, { iterations: 1000, keysize: 512 / 32 })
+      )
       localStorage.setItem(AUTH_TOKEN, data.login.token)
       localStorage.setItem(AUTH_EXPIRY, data.login.tokenExpiry)
+      localStorage.setItem(ENCRYPTION_KEY, encryptionKey)
     }
     if (localStorage.getItem(AUTH_TOKEN)) {
       history.push('/app')
     }
-  }, [data, history])
+  }, [data, history, password, username])
 
   return (
     <LoginWrapper>

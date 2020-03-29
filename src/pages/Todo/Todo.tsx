@@ -1,4 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
+import CryptoJS from 'crypto-js'
 import { addDays, format, isSameDay, parseISO, subDays } from 'date-fns'
 import { isAfter, sub } from 'date-fns/esm'
 import { loader } from 'graphql.macro'
@@ -9,7 +10,7 @@ import styled from 'styled-components'
 import { Button, Input, Label } from '../../components/Form'
 import TodoEntry from '../../components/TodoEntry'
 import TodoList from '../../components/TodoList'
-import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT } from '../../constants'
+import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT, ENCRYPTION_KEY } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
 const createTodoMutation = loader('./graphql/createTodo.graphql')
@@ -110,6 +111,9 @@ const Todo: React.FC = () => {
           isAfter(new Date(), new Date(tokenExpiry || ''))
         ) {
           localStorage.removeItem(AUTH_TOKEN)
+          localStorage.removeItem(AUTH_TOKEN)
+          localStorage.removeItem(AUTH_EXPIRY)
+          localStorage.removeItem(ENCRYPTION_KEY)
           history.push('/')
         }
       }
@@ -119,6 +123,7 @@ const Todo: React.FC = () => {
       if (authRetries >= 120) {
         localStorage.removeItem(AUTH_TOKEN)
         localStorage.removeItem(AUTH_EXPIRY)
+        localStorage.removeItem(ENCRYPTION_KEY)
         history.push('/')
         return
       }
@@ -134,11 +139,15 @@ const Todo: React.FC = () => {
       if (!todoText || todoText.trim().length <= 0) {
         return
       }
+      const encryptionKey = localStorage.getItem(ENCRYPTION_KEY)
+      const title = encryptionKey
+        ? `$$$enc$$$:${CryptoJS.AES.encrypt(todoText.trim(), encryptionKey)}`
+        : todoText.trim()
       createTodo({
         variables: {
           todo: {
             scheduledAt: isSameDay(currentDate, new Date()) ? null : currentDate,
-            title: todoText.trim(),
+            title,
           },
         },
       }).then(() => {
