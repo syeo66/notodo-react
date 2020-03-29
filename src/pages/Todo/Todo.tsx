@@ -12,9 +12,9 @@ import TodoList from '../../components/TodoList'
 import { AUTH_EXPIRY, AUTH_TOKEN, DATE_FORMAT } from '../../constants'
 import { DesignToken } from '../../design-tokens'
 
-const todosQuery = loader('./graphql/todos.graphql')
-const refreshTokenQuery = loader('./graphql/refreshToken.graphql')
 const createTodoMutation = loader('./graphql/createTodo.graphql')
+const refreshTokenQuery = loader('./graphql/refreshToken.graphql')
+const todosQuery = loader('./graphql/todos.graphql')
 const updateTodoMutation = loader('./graphql/updateTodo.graphql')
 
 const DateBar = styled.div`
@@ -246,6 +246,12 @@ const Todo: React.FC = () => {
     // TODO: make token handling generic
     const i = setInterval(() => {
       const tokenExpiry = localStorage.getItem(AUTH_EXPIRY)
+      const isLoggedIn = !!localStorage.getItem(AUTH_TOKEN)
+
+      if (!isLoggedIn) {
+        history.push('/')
+        return
+      }
 
       // refresh token when expiry is within the next 3 minutes
       if (
