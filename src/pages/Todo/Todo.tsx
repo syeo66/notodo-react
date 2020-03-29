@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/react-hooks'
-import CryptoJS from 'crypto-js'
+import { AES } from 'crypto-js'
 import { addDays, format, isSameDay, parseISO, subDays } from 'date-fns'
 import { isAfter, sub } from 'date-fns/esm'
 import { loader } from 'graphql.macro'
@@ -140,9 +140,7 @@ const Todo: React.FC = () => {
         return
       }
       const encryptionKey = localStorage.getItem(ENCRYPTION_KEY)
-      const title = encryptionKey
-        ? `$$$enc$$$:${CryptoJS.AES.encrypt(todoText.trim(), encryptionKey)}`
-        : todoText.trim()
+      const title = encryptionKey ? `$$$enc$$$:${AES.encrypt(todoText.trim(), encryptionKey)}` : todoText.trim()
       createTodo({
         variables: {
           todo: {

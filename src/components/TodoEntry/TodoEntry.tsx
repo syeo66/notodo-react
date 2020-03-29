@@ -1,5 +1,5 @@
 import Color from 'color'
-import CryptoJS from 'crypto-js'
+import { AES, enc } from 'crypto-js'
 import { format } from 'date-fns'
 import React, { useLayoutEffect, useRef } from 'react'
 import styled from 'styled-components'
@@ -61,9 +61,7 @@ const TodoEntryComponent: React.FC<TodoEntryComponentProps> = ({ title, classNam
   const element = useRef<HTMLDivElement>(null)
   const testEncryption = /\$\$\$enc\$\$\$:/
   const content = testEncryption.test(title)
-    ? CryptoJS.enc.Utf8.stringify(
-        CryptoJS.AES.decrypt(title.replace(testEncryption, ''), localStorage.getItem(ENCRYPTION_KEY) || '')
-      )
+    ? enc.Utf8.stringify(AES.decrypt(title.replace(testEncryption, ''), localStorage.getItem(ENCRYPTION_KEY) || ''))
     : title
 
   useLayoutEffect(() => {
