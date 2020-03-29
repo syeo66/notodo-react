@@ -73,6 +73,7 @@ const Todo: React.FC = () => {
   const [selectedId, setSelectedId] = useState('')
 
   // TODO: get rid of the cursor -> only use the id
+  const [authRetries, setAuthRetries] = useState(0)
   const [cursor, setCursor] = useState(0)
   const [isCreating, setIsCreating] = useState(false)
   const [todoText, setTodoText] = useState('')
@@ -114,9 +115,14 @@ const Todo: React.FC = () => {
       }
     },
     onError: () => {
-      localStorage.removeItem(AUTH_TOKEN)
-      localStorage.removeItem(AUTH_EXPIRY)
-      history.push('/')
+      // retry for 10 minutes (600s / 5s = 120)
+      if (authRetries >= 120) {
+        localStorage.removeItem(AUTH_TOKEN)
+        localStorage.removeItem(AUTH_EXPIRY)
+        history.push('/')
+        return
+      }
+      setAuthRetries(prev => prev + 1)
     },
   })
 
@@ -242,7 +248,11 @@ const Todo: React.FC = () => {
       const tokenExpiry = localStorage.getItem(AUTH_EXPIRY)
 
       // refresh token when expiry is within the next 3 minutes
-      if (tokenExpiry && isAfter(new Date(), sub(new Date(tokenExpiry || ''), { minutes: 3 }))) {
+      if (
+        window.navigator.onLine &&
+        tokenExpiry &&
+        isAfter(new Date(), sub(new Date(tokenExpiry || ''), { minutes: 3 }))
+      ) {
         doRefreshToken()
       }
     }, 5000)
